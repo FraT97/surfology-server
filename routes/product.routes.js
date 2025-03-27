@@ -11,7 +11,7 @@ const router = express.Router();
 const Product = require("../models/product.model");
 const { isAdmin } = require( '../middleware/admin.middleware');
 
-router.get("/surfoards", (req,res) => {
+router.get("/surfboards", (req,res) => {
     Product.find() 
     .then((products) => {
         res.status(200).json(products);

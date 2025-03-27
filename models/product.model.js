@@ -24,7 +24,7 @@ const productSchema = new mongoose.Schema({
     },
     category: {
       type: String,
-      enum: ['shortboard', 'longboard', 'fish'],
+      enum: ['shortboard', 'longboard', 'fish', 'funboard', 'gun', 'hybrid'],
       required: true
     },
   }, { timestamps: true });
