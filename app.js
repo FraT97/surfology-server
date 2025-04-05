@@ -10,6 +10,9 @@ require("./db");
 const express = require("express");
 const mongoose = require('mongoose');
 const app = express();
+const cors = require('cors');
+
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 
 const User = require('./models/User.model');
 const Product = require('./models/product.model');
@@ -20,6 +23,7 @@ const { isAdmin } = require('./middleware/admin.middleware');
 
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
 require("./config")(app);
+
 
 
 
