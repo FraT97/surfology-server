@@ -10,9 +10,8 @@ require("./db");
 const express = require("express");
 const mongoose = require('mongoose');
 const app = express();
-const cors = require('cors');
 
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+
 
 const User = require('./models/User.model');
 const Product = require('./models/product.model');
