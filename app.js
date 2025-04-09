@@ -29,7 +29,7 @@ require("./config")(app);
 
 // 👇 Start handling routes here
 const productRoutes = require('./routes/product.routes');
-app.use('/api', isAuthenticated, productRoutes);
+app.use('/api', productRoutes);
 
 const orderRoutes = require('./routes/order.routes');
 app.use('/api', isAuthenticated, orderRoutes);
