@@ -19,8 +19,8 @@ router.post('/orders', isAuthenticated, (req, res) => {
 });
 
 
-router.get('/orders/user/:userId', (req, res) => {
-    Order.find({ userId: req.params.userId })
+router.get('/orders/user/:userId', isAuthenticated, (req, res) => {
+    Order.find({ user: req.params.userId })
         .then(orders => res.status(200).json(orders))
         .catch(error => res.status(400).json(error));
 });
