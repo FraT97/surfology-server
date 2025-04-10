@@ -1,69 +1,54 @@
-/*ORDER ROUTES:
-POST: /api/orders -> create a new order
-GET: /api/orders/:userId -> get own orders
-(admin only)
-GET: api/orders -> get all the orders
-GET: /api/orders/:id -> get a specific order by id
-GET /api/orders/:userId -> get all orders for a specific user by id
-*/
-
 const express = require("express");
+
 const router = express.Router();
 const Order = require('../models/order.model');
 const { isAdmin } = require('../middleware/admin.middleware');
 
-router.post('/orders',  (req,res) => {
-    Order.create(req.body)
-    .then((order) => {
-        res.status(201).json(order);
-    })
-    .catch((error) => {
-        res.status(400).json(error);
-    })
-})
 
-router.get('/orders/:userId' ,  (req,res) => {
-    Order.find({userId: req.params.userId})
-    .then((orders) => {
-        res.status(200).json(orders);
-    })
-    .catch((error) => {
-        res.status(400).json(error);
-    })
-})
+const { isAuthenticated } = require('../middleware/jwt.middleware');
+
+router.post('/orders', isAuthenticated, (req, res) => {
+  const orderData = {
+    ...req.body,
+    user: req.payload._id, 
+  };
+
+  Order.create(orderData)
+    .then(order => res.status(201).json(order))
+    .catch(error => res.status(400).json(error));
+});
 
 
-//ADMIN ROUTES
+router.get('/orders/user/:userId', (req, res) => {
+    Order.find({ userId: req.params.userId })
+        .then(orders => res.status(200).json(orders))
+        .catch(error => res.status(400).json(error));
+});
 
-router.get('/orders',  isAdmin, (req,res) => {
+// ADMIN ROUTES
+
+
+router.get('/orders', isAdmin, (req, res) => {
     Order.find()
-    .then((orders) => {
-        res.status(200).json(orders);
-    })
-    .catch((error) => {
-        res.status(400).json(error);
-    })
-})
+        .then(orders => res.status(200).json(orders))
+        .catch(error => res.status(400).json(error));
+});
 
-router.get('/orders/:id',    isAdmin, (req,res) => {
+
+router.get('/orders/id/:id', isAdmin, (req, res) => {
     Order.findById(req.params.id)
-    .then((order) => {
-        res.status(200).json(order);
-    })
-    .catch((error) => {
-        res.status(400).json(error);
-    })
-})
+        .then(order => {
+            if (!order) return res.status(404).json({ message: "Order not found" });
+            res.status(200).json(order);
+        })
+        .catch(error => res.status(400).json(error));
+});
 
 
-    router.get('/orders/:userId', isAdmin, (req,res) => {
-    Order.find({userId: req.params.userId})
-    .then((orders) => {
-        res.status(200).json(orders);
-    })
-    .catch((error) => {
-        res.status(400).json(error);
-    })
-})
+router.get('/orders/admin/user/:userId', isAdmin, (req, res) => {
+    Order.find({ userId: req.params.userId })
+        .then(orders => res.status(200).json(orders))
+        .catch(error => res.status(400).json(error));
+});
 
-module.exports = router; 
+module.exports = router;

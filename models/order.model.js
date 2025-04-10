@@ -19,7 +19,7 @@ const orderSchema = new mongoose.Schema({
       },
       priceAtPurchase: {
         type: Number,
-        required: true
+        required: true,
       }
     }],
     totalAmount: {
